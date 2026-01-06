@@ -1,0 +1,30 @@
+# RayuOS First Boot Utility Makefile
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O2 -std=c11 -D_POSIX_C_SOURCE=200809L
+LDFLAGS = 
+TARGET = rayuos-firstboot
+PREFIX = /usr/local
+
+SRCS = rayuos-firstboot.c
+OBJS = $(SRCS:.c=.o)
+
+.PHONY: all clean install uninstall
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+clean:
+	rm -f $(TARGET) $(OBJS)
+
+install: $(TARGET)
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/bin/
+
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(TARGET)

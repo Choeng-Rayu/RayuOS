@@ -1,0 +1,109 @@
+#!/bin/bash
+# RayuOS GNOME Edition - Chroot Hook
+# Runs inside the chroot during build
+
+set -e
+
+echo "=== RayuOS GNOME Edition Setup ==="
+
+# Set default locale
+echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+locale-gen
+update-locale LANG=en_US.UTF-8
+
+# Enable zram for compressed swap
+cat > /etc/systemd/system/zram-setup.service << 'EOF'
+[Unit]
+Description=Setup zram swap
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/rayuos-zram-setup
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Create zram setup script
+cat > /usr/local/bin/rayuos-zram-setup << 'EOF'
+#!/bin/bash
+# Setup zram compressed swap
+ZRAM_SIZE=$(($(grep MemTotal /proc/meminfo | awk '{print $2}') / 2))
+modprobe zram
+echo ${ZRAM_SIZE}K > /sys/block/zram0/disksize
+mkswap /dev/zram0
+swapon -p 100 /dev/zram0
+EOF
+chmod +x /usr/local/bin/rayuos-zram-setup
+
+systemctl enable zram-setup.service
+
+# Disable unnecessary services
+systemctl disable apt-daily.timer || true
+systemctl disable apt-daily-upgrade.timer || true
+systemctl disable man-db.timer || true
+
+# Set hostname
+echo "rayuos" > /etc/hostname
+
+# Create default user
+useradd -m -s /bin/bash -G sudo,audio,video,netdev,plugdev rayu || true
+echo "rayu:rayu" | chpasswd
+
+# Enable display manager and NetworkManager
+systemctl enable gdm3
+systemctl enable NetworkManager
+
+# GNOME optimizations for low RAM
+mkdir -p /etc/dconf/db/local.d
+cat > /etc/dconf/db/local.d/00-rayuos << 'EOF'
+# RayuOS GNOME Optimizations
+
+[org/gnome/desktop/interface]
+enable-animations=false
+gtk-enable-primary-paste=false
+
+[org/gnome/desktop/session]
+idle-delay=uint32 300
+
+[org/gnome/desktop/peripherals/touchpad]
+tap-to-click=true
+
+[org/gnome/shell]
+disable-user-extensions=false
+enabled-extensions=[]
+
+[org/gnome/desktop/background]
+picture-options='none'
+primary-color='#2e3436'
+
+[org/gnome/mutter]
+experimental-features=[]
+EOF
+
+# Create dconf profile
+mkdir -p /etc/dconf/profile
+cat > /etc/dconf/profile/user << 'EOF'
+user-db:user
+system-db:local
+EOF
+
+# Update dconf database
+dconf update || true
+
+# Disable GNOME software auto-updates and background services
+mkdir -p /etc/xdg/autostart.disabled
+
+# Disable tracker (saves significant RAM)
+for service in tracker-miner-fs-3 tracker-miner-rss-3 tracker-extract-3; do
+    systemctl --global mask $service.service || true
+done
+
+# Disable evolution data server if not needed
+systemctl --global mask evolution-addressbook-factory.service || true
+systemctl --global mask evolution-calendar-factory.service || true
+systemctl --global mask evolution-source-registry.service || true
+
+echo "=== RayuOS GNOME Edition Setup Complete ==="

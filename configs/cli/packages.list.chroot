@@ -1,0 +1,46 @@
+# RayuOS CLI Edition - Minimal Package List
+# Base system
+linux-image-amd64
+live-boot
+live-config
+live-config-systemd
+systemd-sysv
+
+# Essential utilities
+sudo
+bash-completion
+less
+nano
+vim-tiny
+htop
+curl
+wget
+ca-certificates
+
+# Networking
+ifupdown
+iproute2
+iputils-ping
+net-tools
+network-manager
+openssh-client
+
+# Hardware support
+firmware-linux-free
+pciutils
+usbutils
+
+# Filesystem
+e2fsprogs
+dosfstools
+parted
+
+# System utilities
+cron
+logrotate
+locales
+console-setup
+
+# RayuOS custom utilities
+# rayuos-firstboot
+# rayuos-sysinfo

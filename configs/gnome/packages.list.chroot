@@ -1,0 +1,85 @@
+# RayuOS GNOME Edition - Lightweight Desktop Package List
+# Base system (same as CLI)
+linux-image-amd64
+live-boot
+live-config
+live-config-systemd
+systemd-sysv
+
+# Essential utilities
+sudo
+bash-completion
+less
+nano
+vim-tiny
+htop
+curl
+wget
+ca-certificates
+
+# Networking
+ifupdown
+iproute2
+iputils-ping
+net-tools
+network-manager
+network-manager-gnome
+openssh-client
+
+# Hardware support
+firmware-linux-free
+pciutils
+usbutils
+
+# Filesystem
+e2fsprogs
+dosfstools
+parted
+gvfs
+
+# System utilities
+cron
+logrotate
+locales
+console-setup
+
+# GNOME Desktop (minimal selection)
+gnome-shell
+gnome-session
+gnome-terminal
+gnome-control-center
+gnome-tweaks
+nautilus
+gdm3
+xdg-user-dirs
+xdg-user-dirs-gtk
+
+# Essential GNOME apps only
+gnome-text-editor
+gnome-calculator
+gnome-system-monitor
+eog
+evince
+file-roller
+
+# Fonts
+fonts-dejavu-core
+fonts-liberation
+
+# Audio
+pipewire
+pipewire-pulse
+wireplumber
+
+# X11/Wayland
+xserver-xorg-core
+xserver-xorg-input-libinput
+xwayland
+
+# Themes
+adwaita-icon-theme
+gnome-themes-extra
+
+# RayuOS custom utilities
+# rayuos-firstboot
+# rayuos-sysinfo

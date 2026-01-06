@@ -1,0 +1,25 @@
+# Build outputs
+build/
+artifacts/
+*.iso
+
+# C build artifacts
+*.o
+*.a
+src/rayuos-firstboot/rayuos-firstboot
+src/rayuos-sysinfo/rayuos-sysinfo
+src/rayu/rayu
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
