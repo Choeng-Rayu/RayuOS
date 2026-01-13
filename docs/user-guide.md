@@ -253,6 +253,27 @@ rayu show [package-name]
 rayu show vim
 ```
 
+#### Friendly Aliases (Natural Syntax)
+
+These make commands more readable while keeping compatibility with Debian tools.
+
+```bash
+# Use `rayu` like sudo for apt operations
+rayu apt update
+rayu apt install htop
+
+# Human-friendly file listing (alias of `ls -la`)
+rayu show file            # lists current directory
+rayu show file /var/log   # lists a specific path
+
+# Change directory (works because `rayu` is a shell function)
+rayu goto /etc            # changes your current shell directory
+```
+
+Notes:
+- `rayu apt ...` runs `apt` with sudo if available.
+- `rayu goto` is implemented as a shell function so it can change your current shell directory; it’s available by default on RayuOS.
+
 #### System Information
 
 ```bash

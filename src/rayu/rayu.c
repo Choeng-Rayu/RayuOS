@@ -14,6 +14,8 @@
  *   rayu update       - Update package lists (wraps apt)
  *   rayu upgrade      - Upgrade packages (wraps apt)
  *   rayu search PKG   - Search for packages (wraps apt)
+ *   rayu apt ...      - Pass-through to apt (e.g., 'rayu apt install htop')
+ *   rayu show file [PATH] - List files (friendly alias of ls)
  * 
  * Copyright (c) 2026 RayuOS Project
  * MIT License
@@ -54,6 +56,8 @@ static void show_status(void);
 static void show_info(void);
 static void show_monitor(void);
 static int run_apt_command(int argc, char *argv[]);
+static int run_apt_passthrough(int argc, char *argv[]);
+static int run_show_command(int argc, char *argv[]);
 static char *human_size(unsigned long bytes, char *buf, size_t len);
 static char *human_time(long secs, char *buf, size_t len);
 static int get_cpu_usage(void);
@@ -89,11 +93,17 @@ static void print_usage(void)
     printf("  upgrade         Upgrade all packages\n");
     printf("  search <pkg>    Search for packages\n");
     printf("  list            List installed packages\n");
-    printf("  clean           Clean package cache\n\n");
+    printf("  clean           Clean package cache\n");
+    printf("  apt <args>      Pass through directly to apt (sudo recommended)\n\n");
+    printf(C_BOLD "Friendly Aliases:\n" C_RESET);
+    printf("  show file [DIR] List files (alias of 'ls -la')\n");
+    printf("  goto <DIR>      Change directory (requires shell function)\n\n");
     printf(C_BOLD "Examples:\n" C_RESET);
     printf("  rayu                    # Show system status\n");
-    printf("  rayu install htop       # Install htop\n");
+    printf("  rayu apt install htop   # or 'rayu install htop'\n");
     printf("  rayu update && rayu upgrade\n");
+    printf("  rayu show file /var/log # List logs\n");
+    printf("  rayu goto /etc          # Works via shell function\n");
     printf("\n");
 }
 
@@ -466,6 +476,41 @@ static int run_apt_command(int argc, char *argv[])
     return 1;
 }
 
+/* Run apt passthrough: 'rayu apt ...' */
+static int run_apt_passthrough(int argc, char *argv[])
+{
+    if (argc < 3) {
+        fprintf(stderr, C_RED "Usage: rayu apt <args>\n" C_RESET);
+        return 1;
+    }
+    char cmd[2048] = "apt ";
+    for (int i = 2; i < argc; i++) {
+        strcat(cmd, argv[i]);
+        strcat(cmd, " ");
+    }
+    printf(C_CYAN C_BOLD "rayu:" C_RESET " Running '%s'\n\n", cmd);
+    return system(cmd);
+}
+
+/* Friendly 'show' commands */
+static int run_show_command(int argc, char *argv[])
+{
+    if (argc < 3) {
+        fprintf(stderr, C_RED "Usage: rayu show <what> [args]\n" C_RESET);
+        fprintf(stderr, "Examples: 'rayu show file [DIR]'\n");
+        return 1;
+    }
+    const char *what = argv[2];
+    if (strcmp(what, "file") == 0 || strcmp(what, "files") == 0) {
+        const char *target = argc >= 4 ? argv[3] : ".";
+        char cmd[1024];
+        snprintf(cmd, sizeof(cmd), "ls -la -- %s", target);
+        return system(cmd);
+    }
+    fprintf(stderr, C_RED "Unknown 'show' target: %s\n" C_RESET, what);
+    return 1;
+}
+
 /* Main entry point */
 int main(int argc, char *argv[])
 {
@@ -507,6 +552,16 @@ int main(int argc, char *argv[])
     if (strcmp(cmd, "status") == 0) {
         show_status();
         return 0;
+    }
+
+    /* Friendly aliases */
+    if (strcmp(cmd, "show") == 0) {
+        return run_show_command(argc, argv);
+    }
+
+    /* apt passthrough: `rayu apt ...` */
+    if (strcmp(cmd, "apt") == 0) {
+        return run_apt_passthrough(argc, argv);
     }
     
     /* Package management - pass to apt */
