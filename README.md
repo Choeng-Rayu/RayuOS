@@ -1,4 +1,7 @@
 # RayuOS
+
+<div align="center">
+
 ```
   _____                      ____   _____ 
  |  __ \                    / __ \ / ____|
@@ -10,20 +13,28 @@
               |___/
 ```
 
+### ⚡ **Lightweight • Fast • Minimalist** ⚡
+
+<br>
+
+<a href="https://drive.google.com/uc?export=download&confirm=1&id=1kp0vxle0xflPgcAgtFnrBG5DGMbt4fhi">
+  <img src="https://img.shields.io/badge/⬇️_Download-CLI_Edition-FF6B35?style=for-the-badge&logo=gnu-bash&logoColor=white" height="50">
+</a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://drive.google.com/uc?export=download&confirm=1&id=1kp0vxle0xflPgcAgtFnrBG5DGMbt4fhi">
+  <img src="https://img.shields.io/badge/⬇️_Download-Gnome_GUI-4ECDC4?style=for-the-badge&logo=gnome&logoColor=white" height="50">
+</a>
+
+<br><br>
+
 <p align="center">
   <strong>A lightweight Debian-based Linux distribution optimized for low RAM and CPU usage</strong>
 </p>
 
 <p align="center">
-  <a href="https://drive.google.com/uc?export=download&confirm=1&id=1kp0vxle0xflPgcAgtFnrBG5DGMbt4fhi">
-    <img src="https://img.shields.io/badge/Download%20Now-1.0.0-brightgreen?style=for-the-badge&logo=download" alt="Download RayuOS">
-  </a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/License-MIT-blue" alt="License">
-  <img src="https://img.shields.io/badge/Platform-Linux-orange" alt="Platform">
-  <img src="https://img.shields.io/badge/Base-Debian-red" alt="Base">
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/Platform-Linux-orange?style=flat-square" alt="Platform">
+  <img src="https://img.shields.io/badge/Base-Debian-red?style=flat-square" alt="Base">
 </p>
 
 ## Editions
