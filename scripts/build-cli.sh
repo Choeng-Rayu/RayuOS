@@ -11,9 +11,17 @@ ARTIFACTS_DIR="${PROJECT_ROOT}/artifacts"
 ARCH="${ARCH:-amd64}"
 VERBOSE="${VERBOSE:-0}"
 
+# Read version from VERSION file
+if [ -f "$PROJECT_ROOT/VERSION" ]; then
+    VERSION=$(cat "$PROJECT_ROOT/VERSION" | tr -d '[:space:]')
+else
+    VERSION="1.0.0"
+fi
+
 echo "========================================"
 echo "  RayuOS CLI Edition Builder"
 echo "========================================"
+echo "Version: $VERSION"
 echo "Architecture: $ARCH"
 echo "Build directory: $BUILD_DIR"
 echo ""
@@ -116,7 +124,7 @@ fi
 # Move the ISO to artifacts
 ISO_FILE=$(ls -1 *.iso 2>/dev/null | head -1)
 if [ -n "$ISO_FILE" ]; then
-    OUTPUT_NAME="rayuos-cli-${ARCH}.iso"
+    OUTPUT_NAME="rayuos-cli-v${VERSION}-${ARCH}.iso"
     mv "$ISO_FILE" "$ARTIFACTS_DIR/$OUTPUT_NAME"
     echo ""
     echo "========================================"
